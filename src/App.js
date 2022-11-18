@@ -1,24 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import './App.scss';
+import '@popperjs/core';
+import 'bootstrap/dist/js/bootstrap';
+
+import NavigationBarComponent from './components/NavigationBarComponent';
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import HomePage from './pages/HomePage';
+import RegisterPage from './pages/RegisterPage';
+import { WalletAPIProvider } from './context/WalletAPIProvider';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <WalletAPIProvider>
+      <BrowserRouter>
+        <div className="App">
+          <header>
+            <NavigationBarComponent />
+          </header>
+          <main style={{ backgroundColor: '#eee' }}>
+            <Routes>
+              <Route path='/' element={<HomePage />} />
+              <Route path='/register' element={<RegisterPage />} />
+            </Routes>
+          </main>
+        </div>
+      </BrowserRouter>
+    </WalletAPIProvider>
   );
 }
 
