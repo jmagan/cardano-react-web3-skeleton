@@ -1,11 +1,10 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { WalletAPIContext } from '../context/WalletAPIContext';
 
 import axios from 'axios';
 import * as CSL from '@emurgo/cardano-serialization-lib-browser';
 
-export default function RegisterPage() {
-
+export default function LoginPage() {
   const { walletAPI } = useContext(WalletAPIContext);
 
   const [stakeAddresses, setStakeAddresses] = useState([]);
@@ -79,7 +78,7 @@ export default function RegisterPage() {
                   <div className="row justify-content-center">
                     <div className="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
 
-                      <p className="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Sign up</p>
+                      <p className="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Login</p>
 
                       <form className="mx-1 mx-md-4">
 
@@ -97,38 +96,11 @@ export default function RegisterPage() {
                                 })
                               }
                             </select>
-
                           </div>
-                        </div>
-
-
-                        <div className="d-flex flex-row align-items-center mb-4">
-                          <i className="fas fa-user fa-lg me-3 fa-fw"></i>
-                          <div className="form-outline flex-fill mb-0">
-                            <label className="form-label" htmlFor="form3Example1c">Your Name</label>
-                            <input type="text" id="form3Example1c" className="form-control"
-                              onChange={(evt) => setUserName(evt.target.value)} />
-                          </div>
-                        </div>
-
-                        <div className="d-flex flex-row align-items-center mb-4">
-                          <i className="fas fa-envelope fa-lg me-3 fa-fw"></i>
-                          <div className="form-outline flex-fill mb-0">
-                            <label className="form-label" htmlFor="form3Example3c">Your Email</label>
-                            <input type="email" id="form3Example3c" className="form-control"
-                              onChange={evt => setUserEmail(evt.target.value)} />
-                          </div>
-                        </div>
-
-                        <div className="form-check d-flex justify-content-center mb-5">
-                          <input className="form-check-input me-2" type="checkbox" value="" id="form2Example3c" />
-                          <label className="form-check-label" htmlFor="form2Example3">
-                            I agree all statements in <a href="#!">Terms of service</a>
-                          </label>
                         </div>
 
                         <div className="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-                          <button type="button" className="btn btn-primary btn-lg" onClick={() => userSignUp()} disabled={stakeAddress === undefined}>Register</button>
+                          <button type="button" className="btn btn-primary btn-lg" onClick={() => userSignUp()} disabled={stakeAddress === undefined}>Login</button>
                         </div>
 
                       </form>
@@ -150,3 +122,5 @@ export default function RegisterPage() {
     </div>
   )
 }
+
+

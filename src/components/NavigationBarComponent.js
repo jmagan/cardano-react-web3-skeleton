@@ -31,6 +31,9 @@ export default function NavigationBarComponent() {
         <div className="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
           <ul className="navbar-nav">
             <li className='nav-item'>
+              <Link className='nav-link' to='/login'>Login</Link>
+            </li>
+            <li className='nav-item'>
               <Link className='nav-link' to='/register'>Sign Up</Link>
             </li>
             <li className='nav-item navbar-text'>
