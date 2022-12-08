@@ -1,45 +1,57 @@
 import React, { useContext, useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+
 import { WalletAPIContext } from '../context/WalletAPIContext';
 
 import axios from 'axios';
 import * as CSL from '@emurgo/cardano-serialization-lib-browser';
+import AuthContext from '../context/AuthContext';
+
 
 export default function LoginPage() {
   const { walletAPI } = useContext(WalletAPIContext);
+  const { setWalletAddress, setAccessToken } = useContext(AuthContext)
 
+  const [errorMessage, setErrorMessage] = useState()
   const [stakeAddresses, setStakeAddresses] = useState([]);
-
   const [stakeAddress, setStakeAddress] = useState(undefined);
-  const [userName, setUserName] = useState('');
-  const [userEmail, setUserEmail] = useState('');
 
-  const userSignUp = async () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
+
+  const userLogin = async () => {
     try {
       const payload = {
         host: "HOST",
-        action: "Sign up",
-        name: userName,
-        email: userEmail
+        action: "Login"
       }
       const rewardAddress = CSL.Address.from_bech32(stakeAddress);
 
       const signature = await walletAPI.signData(rewardAddress.to_hex(), Buffer.from(JSON.stringify(payload)).toString('hex'));
-      const response = await axios.post(process.env.REACT_APP_BACKEND_URL + '/register', {
-        name: userName,
-        email: userEmail,
+      const response = await axios.post(process.env.REACT_APP_BACKEND_URL + '/login', {
         walletAddress: stakeAddress,
         key: signature.key,
         signature: signature.signature
+      }, {
+        headers: { 'Content-Type': 'application/json' }
       });
 
-      console.log(response.data);
+      setWalletAddress(stakeAddress);
+      setAccessToken(response.data.accessToken)
+      navigate(from);
     } catch (error) {
-      console.log(error);
+      if (!error?.response) {
+        setErrorMessage('No Server Response');
+      } else {
+        setErrorMessage(error.response.data.errors.msg)
+      }
     }
-
-
-
   }
+
+  useEffect(() => {
+    setErrorMessage('');
+  }, [stakeAddress])
 
   useEffect(() => {
     if (stakeAddress === undefined && stakeAddresses?.length === 1) {
@@ -52,15 +64,9 @@ export default function LoginPage() {
       async () => {
         if (walletAPI !== undefined) {
           const rewardAddresses = await walletAPI.getRewardAddresses();
-
-          console.log("Reward addresses: " + rewardAddresses);
-
           const rewardAddressesBech32 = rewardAddresses.map((addr) => {
             return CSL.Address.from_hex(addr).to_bech32();
           });
-
-          console.log("Reward addresses bech32: " + rewardAddressesBech32);
-
           setStakeAddresses(rewardAddressesBech32);
         }
       }
@@ -77,6 +83,12 @@ export default function LoginPage() {
                 <div className="card-body p-md-5">
                   <div className="row justify-content-center">
                     <div className="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+                      {
+                        errorMessage &&
+                        <div className="alert alert-primary" role="alert">
+                          {errorMessage}
+                        </div>
+                      }
 
                       <p className="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Login</p>
 
@@ -100,7 +112,7 @@ export default function LoginPage() {
                         </div>
 
                         <div className="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-                          <button type="button" className="btn btn-primary btn-lg" onClick={() => userSignUp()} disabled={stakeAddress === undefined}>Login</button>
+                          <button type="button" className="btn btn-primary btn-lg" onClick={() => userLogin()} disabled={stakeAddress === undefined}>Login</button>
                         </div>
 
                       </form>

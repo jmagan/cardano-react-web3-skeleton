@@ -120,13 +120,6 @@ export default function RegisterPage() {
                           </div>
                         </div>
 
-                        <div className="form-check d-flex justify-content-center mb-5">
-                          <input className="form-check-input me-2" type="checkbox" value="" id="form2Example3c" />
-                          <label className="form-check-label" htmlFor="form2Example3">
-                            I agree all statements in <a href="#!">Terms of service</a>
-                          </label>
-                        </div>
-
                         <div className="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
                           <button type="button" className="btn btn-primary btn-lg" onClick={() => userSignUp()} disabled={stakeAddress === undefined}>Register</button>
                         </div>
