@@ -1,106 +1,101 @@
-import { useState, useEffect, createContext } from 'react'
-import { Buffer } from 'buffer'
+import { useState, useEffect, createContext } from 'react';
+import { Buffer } from 'buffer';
 
-const { Address } = await import('@emurgo/cardano-serialization-lib-browser')
+const { Address } = await import('@emurgo/cardano-serialization-lib-browser');
 
+export const WalletAPIContext = createContext({
+  address: null,
+  networkId: null,
+  selectedWallet: null,
+  walletAPI: null,
+  walletAPIError: null,
+  selectWallet: (wallet) => {},
+  connectWallet: () => {},
+  isMainnet: null,
+  contextLoaded: true,
+});
 
-export const WalletAPIContext = createContext(
-  {
-    address: null,
-    networkId: null,
-    selectedWallet: null,
-    walletAPI: null,
-    walletAPIError: null,
-    selectWallet: (wallet) => { },
-    connectWallet: () => { },
-    isMainnet: null,
-    contextLoaded: true
-  }
-)
+export const WalletAPIProvider = ({ children }) => {
+  const { cardano } = window;
 
-export const WalletAPIProvider = ({
-  children,
-}) => {
-  const { cardano } = window
+  const [selectedWallet, setSelectedWallet] = useState();
+  const [walletAPI, setWalletAPI] = useState();
+  const [address, setAddress] = useState(localStorage.getItem('address'));
+  const [networkId, setNetworkId] = useState(localStorage.getItem('networkId'));
 
-  const [selectedWallet, setSelectedWallet] = useState()
-  const [walletAPI, setWalletAPI] = useState()
-  const [address, setAddress] = useState(localStorage.getItem('address'))
-  const [networkId, setNetworkId] = useState(localStorage.getItem('networkId'))
-
-  const [walletAPIError, setWalletAPIError] = useState()
-  const [isMainnet, setIsMainnet] = useState(false)
+  const [walletAPIError, setWalletAPIError] = useState();
+  const [isMainnet, setIsMainnet] = useState(false);
 
   useEffect(() => {
     if (localStorage.getItem('selectedWallet')) {
-      selectWallet(localStorage.getItem('selectedWallet'))
+      selectWallet(localStorage.getItem('selectedWallet'));
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (selectedWallet) {
-      connectWallet()
+      connectWallet();
     }
-  }, [selectedWallet])
+  }, [selectedWallet]);
 
   useEffect(() => {
     if (networkId === 0) {
-      getAddress()
-      setIsMainnet(false)
+      getAddress();
+      setIsMainnet(false);
     } else if (networkId === 1) {
-      getAddress()
-      setIsMainnet(true)
+      getAddress();
+      setIsMainnet(true);
     }
-  }, [networkId])
+  }, [networkId]);
 
   const selectWallet = (wallet) => {
-    setSelectedWallet(wallet)
-    localStorage.setItem('selectedWallet', wallet)
-  }
+    setSelectedWallet(wallet);
+    localStorage.setItem('selectedWallet', wallet);
+  };
 
   const connectWallet = async () => {
-    if (selectedWallet === undefined) return
+    if (selectedWallet === undefined) return;
 
-    let walletAPIResponse
+    let walletAPIResponse;
     try {
       if (selectedWallet === 'Nami') {
-        walletAPIResponse = await cardano?.nami?.enable()
+        walletAPIResponse = await cardano?.nami?.enable();
       } else if (selectedWallet === 'Flint') {
-        walletAPIResponse = await cardano?.flint?.enable()
+        walletAPIResponse = await cardano?.flint?.enable();
       } else if (selectedWallet === 'Eternl') {
-        walletAPIResponse = await cardano?.eternl?.enable()
+        walletAPIResponse = await cardano?.eternl?.enable();
       }
 
-      if (walletAPIResponse === undefined) return
+      if (walletAPIResponse === undefined) return;
 
       if (walletAPIResponse.hasOwnProperty('getNetworkId')) {
         // WalletAPI fetched successfully
-        const _walletAPI = walletAPIResponse
-        const _networkId = await _walletAPI.getNetworkId()
+        const _walletAPI = walletAPIResponse;
+        const _networkId = await _walletAPI.getNetworkId();
 
-        setWalletAPI(_walletAPI)
-        localStorage.setItem('networkId', _networkId)
-        setNetworkId(_networkId)
+        setWalletAPI(_walletAPI);
+        localStorage.setItem('networkId', _networkId);
+        setNetworkId(_networkId);
       } else {
         // There was an APIError
-        const _APIError = walletAPIResponse
+        const _APIError = walletAPIResponse;
 
-        setWalletAPIError(_APIError)
+        setWalletAPIError(_APIError);
       }
     } catch (err) {
-      setNetworkId(null)
-      setAddress(null)
-      setSelectedWallet(null)
-      console.log(err)
+      setNetworkId(null);
+      setAddress(null);
+      setSelectedWallet(null);
+      console.log(err);
     }
-  }
+  };
 
   const getAddress = async () => {
-    const raw = await walletAPI?.getChangeAddress()
-    const addr = Address.from_bytes(Buffer.from(raw ?? '', 'hex')).to_bech32()
-    localStorage.setItem('address', addr)
-    setAddress(addr)
-  }
+    const raw = await walletAPI?.getChangeAddress();
+    const addr = Address.from_bytes(Buffer.from(raw ?? '', 'hex')).to_bech32();
+    localStorage.setItem('address', addr);
+    setAddress(addr);
+  };
 
   return (
     <WalletAPIContext.Provider
@@ -112,10 +107,10 @@ export const WalletAPIProvider = ({
         walletAPIError,
         selectWallet,
         connectWallet,
-        isMainnet
+        isMainnet,
       }}
     >
       {children}
     </WalletAPIContext.Provider>
-  )
-}
+  );
+};

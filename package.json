@@ -24,7 +24,13 @@
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject",
-    "deploy": "react-app-rewired build && gh-pages -d build"
+    "deploy": "react-app-rewired build && gh-pages -d build",
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "prettier --write"
+    ]
   },
   "eslintConfig": {
     "extends": [
@@ -45,6 +51,9 @@
     ]
   },
   "devDependencies": {
+    "husky": "^8.0.0",
+    "lint-staged": "^13.1.0",
+    "prettier": "^2.8.1",
     "react-app-rewired": "^2.2.1"
   }
 }
