@@ -99,7 +99,7 @@ export default function LoginPage() {
                               </>
                             );
                           })}
-                  </div>
+                        </div>
                       )}
 
                       <p className="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Login</p>
@@ -117,7 +117,8 @@ export default function LoginPage() {
                               aria-label="Default select example"
                               value={stakeAddress}
                               disabled={stakeAddresses.length === 0}
-                              onChange={(event) => setStakeAddress(event.target.value)}>
+                              onChange={(event) => setStakeAddress(event.target.value)}
+                            >
                               {stakeAddresses.map((option) => {
                                 return (
                                   <option key={option} value={option}>
@@ -134,7 +135,8 @@ export default function LoginPage() {
                             type="button"
                             className="btn btn-primary btn-lg"
                             onClick={() => userLogin()}
-                            disabled={stakeAddress === undefined}>
+                            disabled={stakeAddress === undefined}
+                          >
                             Login
                           </button>
                         </div>
