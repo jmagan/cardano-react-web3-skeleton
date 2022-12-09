@@ -6,20 +6,19 @@
  * 
  */
 
- main {
+main {
   min-height: 75vh;
- }
+}
 
-$primary:       #8224e3;
-$info:          #0095eb;
-$warning:       #e38658;
-$dark:          #140d2e;
+$primary: #8224e3;
+$info: #0095eb;
+$warning: #e38658;
+$dark: #140d2e;
 
-$font-family-sans-serif:  Nunito, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+$font-family-sans-serif: Nunito, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
+  'Liberation Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
-
-
-@import "~bootstrap/scss/bootstrap";
+@import '~bootstrap/scss/bootstrap';
 
 .navbar-brand {
   transform: translateX(-50%);
