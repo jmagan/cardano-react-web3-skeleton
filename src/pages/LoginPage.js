@@ -10,9 +10,9 @@ import AuthContext from '../context/AuthContext';
 
 export default function LoginPage() {
   const { walletAPI } = useContext(WalletAPIContext);
-  const { setWalletAddress, setAccessToken } = useContext(AuthContext)
+  const { setWalletAddress, setAccessToken, setUserData } = useContext(AuthContext)
 
-  const [errorMessage, setErrorMessage] = useState()
+  const [errorMessage, setErrorMessage] = useState([])
   const [stakeAddresses, setStakeAddresses] = useState([]);
   const [stakeAddress, setStakeAddress] = useState(undefined);
 
@@ -39,12 +39,15 @@ export default function LoginPage() {
 
       setWalletAddress(stakeAddress);
       setAccessToken(response.data.accessToken)
+      setUserData(response.data.user)
       navigate(from);
     } catch (error) {
       if (!error?.response) {
         setErrorMessage('No Server Response');
+      } else if (Array.isArray(error.response.data.errors.msg)) {
+        setErrorMessage(error.response.data.errors.msg.map(val => val.param + ': ' + val.msg))
       } else {
-        setErrorMessage(error.response.data.errors.msg)
+        setErrorMessage([error.response.data.errors.msg])
       }
     }
   }
@@ -84,9 +87,11 @@ export default function LoginPage() {
                   <div className="row justify-content-center">
                     <div className="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
                       {
-                        errorMessage &&
+                        errorMessage.length > 0 &&
                         <div className="alert alert-primary" role="alert">
-                          {errorMessage}
+                          {
+                            errorMessage.map(error => { return <>{error} <br /></> })
+                          }
                         </div>
                       }
 
