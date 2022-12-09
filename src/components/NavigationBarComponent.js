@@ -14,7 +14,7 @@ export default function NavigationBarComponent() {
 
   const { address, networkId, selectWallet, selectedWallet } = useContext(WalletAPIContext)
 
-  const { walletAddress } = useContext(AuthContext)
+  const { userData } = useContext(AuthContext)
 
   useEffect(() => {
     console.log("Address changed", address)
@@ -43,7 +43,7 @@ export default function NavigationBarComponent() {
               <Link className='nav-link' to='/register'>Sign Up</Link>
             </li>
             <li className='nav-item navbar-text'>
-              {address ? <span className='p-2 text-white bg-success border border-success rounded-pill'>{walletAddress}</span> : ''}
+              {address ? <span className='p-2 text-white bg-success border border-success rounded-pill'>{userData?.name}</span> : ''}
             </li>
             <li className="nav-item mt-2 mt-sm-0">
               <div className="dropdown">
