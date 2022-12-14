@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import { WalletAPIContext } from '../context/WalletAPIContext';
 
-import axios from 'axios';
+import axios from '../util/axios';
 import * as CSL from '@emurgo/cardano-serialization-lib-browser';
 import AuthContext from '../context/AuthContext';
 
@@ -31,17 +31,11 @@ export default function LoginPage() {
         rewardAddress.to_hex(),
         Buffer.from(JSON.stringify(payload)).toString('hex'),
       );
-      const response = await axios.post(
-        process.env.REACT_APP_BACKEND_URL + '/login',
-        {
-          walletAddress: stakeAddress,
-          key: signature.key,
-          signature: signature.signature,
-        },
-        {
-          headers: { 'Content-Type': 'application/json' },
-        },
-      );
+      const response = await axios.post('/login', {
+        walletAddress: stakeAddress,
+        key: signature.key,
+        signature: signature.signature,
+      });
 
       setWalletAddress(stakeAddress);
       setAccessToken(response.data.accessToken);
@@ -49,7 +43,7 @@ export default function LoginPage() {
       navigate(from);
     } catch (error) {
       if (!error?.response) {
-        setErrorMessage('No Server Response');
+        setErrorMessage(['No Server Response']);
       } else if (Array.isArray(error.response.data.errors.msg)) {
         setErrorMessage(error.response.data.errors.msg.map((val) => val.param + ': ' + val.msg));
       } else {
@@ -91,7 +85,7 @@ export default function LoginPage() {
                   <div className="row justify-content-center">
                     <div className="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
                       {errorMessage.length > 0 && (
-                        <div className="alert alert-primary" role="alert">
+                        <div className="alert alert-danger" role="alert">
                           {errorMessage.map((error) => {
                             return (
                               <>

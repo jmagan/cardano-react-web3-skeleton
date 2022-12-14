@@ -11,6 +11,7 @@ import RequireAuthComponent from './components/RequireAuthComponent';
 import PrivatePage from './pages/PrivatePage';
 import { WalletAPIProvider } from './context/WalletAPIContext';
 import { AuthProvider } from './context/AuthContext';
+import ProfilePage from './pages/ProfilePage';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
                 {/* Public private */}
                 <Route element={<RequireAuthComponent />}>
                   <Route path="/private" element={<PrivatePage />} />
+                  <Route path="/profile" element={<ProfilePage />} />
                 </Route>
               </Routes>
             </main>
