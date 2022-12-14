@@ -54,7 +54,7 @@ export default function RegisterPage() {
       navigate('/');
     } catch (error) {
       if (!error?.response) {
-        setErrorMessage('No Server Response');
+        setErrorMessage(['No Server Response']);
       } else if (Array.isArray(error.response.data.errors.msg)) {
         setErrorMessage(error.response.data.errors.msg.map((val) => val.param + ': ' + val.msg));
       } else {
@@ -98,7 +98,7 @@ export default function RegisterPage() {
                   <div className="row justify-content-center">
                     <div className="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
                       {errorMessage.length > 0 && (
-                        <div className="alert alert-primary" role="alert">
+                        <div className="alert alert-danger" role="alert">
                           {errorMessage.map((error) => {
                             return (
                               <>
