@@ -39,10 +39,10 @@ export default function ProfilePage() {
         if (isMounted) {
           setEmail(profile.email);
           setName(profile.name);
-          setPhone(profile.phone);
-          setCity(profile.city);
-          setCountry(profile.country);
-          setWalletAddress(profile.walletAddress);
+          setPhone(profile.phone ?? '');
+          setCity(profile.city ?? '');
+          setCountry(profile.country ?? '');
+          setWalletAddress(profile.walletAddress ?? '');
           setUrlTwitter(profile.urlTwitter ?? '');
           setUrlGithub(profile.urlGithub ?? '');
         }

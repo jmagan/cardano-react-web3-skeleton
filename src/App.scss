@@ -19,6 +19,7 @@ $font-family-sans-serif: Nunito, system-ui, -apple-system, 'Segoe UI', Roboto, '
   'Liberation Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
 @import '~bootstrap/scss/bootstrap';
+@import '~bootstrap-icons/font/bootstrap-icons';
 
 .navbar-brand {
   transform: translateX(-50%);
