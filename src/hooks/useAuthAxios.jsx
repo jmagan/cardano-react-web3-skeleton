@@ -24,16 +24,20 @@ export default function useAuthAxios() {
         const prevRequest = error?.config;
         if (error?.response?.status === 401 && !prevRequest?.sent) {
           prevRequest.sent = true;
-          const refreshData = await refresh();
-          setAccessToken(refreshData.accessToken);
-          prevRequest.headers = { ...prevRequest.headers };
-          prevRequest.headers['Authorization'] = `Bearer ${refreshData.accessToken}`;
 
-          return axiosPrivate(prevRequest);
-        } else if (error?.response?.status === 401 && prevRequest?.sent) {
-          setAccessToken(null);
-          setUserData(null);
-          setWalletAddress(null);
+          try {
+            const refreshData = await refresh();
+            setAccessToken(refreshData.accessToken);
+            prevRequest.headers = { ...prevRequest.headers };
+            prevRequest.headers['Authorization'] = `Bearer ${refreshData.accessToken}`;
+
+            return axiosPrivate(prevRequest);
+          } catch (err) {
+            setAccessToken(null);
+            setUserData(null);
+            setWalletAddress(null);
+            return Promise.reject(err);
+          }
         }
         return Promise.reject(error);
       },
