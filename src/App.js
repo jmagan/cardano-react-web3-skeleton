@@ -13,6 +13,7 @@ import { WalletAPIProvider } from './context/WalletAPIContext';
 import { AuthProvider } from './context/AuthContext';
 import ProfilePage from './pages/ProfilePage';
 import CityPage from './pages/CityPage';
+import PersistLoginComponent from './components/persistLoginComponent';
 
 function App() {
   return (
@@ -31,10 +32,12 @@ function App() {
                 <Route path="/login" element={<LoginPage />} />
 
                 {/* Public private */}
-                <Route element={<RequireAuthComponent />}>
-                  <Route path="/private" element={<PrivatePage />} />
-                  <Route path="/profile" element={<ProfilePage />} />
-                  <Route path="/city" element={<CityPage />} />
+                <Route element={<PersistLoginComponent />}>
+                  <Route element={<RequireAuthComponent />}>
+                    <Route path="/private" element={<PrivatePage />} />
+                    <Route path="/profile" element={<ProfilePage />} />
+                    <Route path="/city" element={<CityPage />} />
+                  </Route>
                 </Route>
               </Routes>
             </main>
