@@ -1,9 +1,11 @@
-import axios, { axiosPrivate } from '../util/axios';
+import { axiosPrivate } from '../util/axios';
 import { useContext, useEffect } from 'react';
 import AuthContext from '../context/AuthContext';
+import useRefreshToken from './useRefreshToken';
 
 export default function useAuthAxios() {
-  const { accessToken, setAccessToken } = useContext(AuthContext);
+  const { accessToken, setAccessToken, setUserData, setWalletAddress } = useContext(AuthContext);
+  const refresh = useRefreshToken();
 
   useEffect(() => {
     const requestIntercept = axiosPrivate.interceptors.request.use(
@@ -16,23 +18,22 @@ export default function useAuthAxios() {
       (error) => Promise.reject(error),
     );
 
-    async function refresh() {
-      const response = await axios.get('/token');
-
-      setAccessToken(response.data.accessToken);
-      return response.data.accessToken;
-    }
-
     const responseIntercept = axiosPrivate.interceptors.response.use(
       (response) => response,
       async (error) => {
         const prevRequest = error?.config;
         if (error?.response?.status === 401 && !prevRequest?.sent) {
           prevRequest.sent = true;
-          const newAccessToken = await refresh();
+          const refreshData = await refresh();
+          setAccessToken(refreshData.accessToken);
           prevRequest.headers = { ...prevRequest.headers };
-          prevRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
+          prevRequest.headers['Authorization'] = `Bearer ${refreshData.accessToken}`;
+
           return axiosPrivate(prevRequest);
+        } else if (error?.response?.status === 401 && prevRequest?.sent) {
+          setAccessToken(null);
+          setUserData(null);
+          setWalletAddress(null);
         }
         return Promise.reject(error);
       },
@@ -42,7 +43,7 @@ export default function useAuthAxios() {
       axiosPrivate.interceptors.request.eject(requestIntercept);
       axiosPrivate.interceptors.response.eject(responseIntercept);
     };
-  }, [accessToken, setAccessToken]);
+  }, [accessToken, setAccessToken, setUserData, setWalletAddress, refresh]);
 
   return axiosPrivate;
 }
