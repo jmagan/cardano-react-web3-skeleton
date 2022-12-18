@@ -12,6 +12,7 @@ import PrivatePage from './pages/PrivatePage';
 import { WalletAPIProvider } from './context/WalletAPIContext';
 import { AuthProvider } from './context/AuthContext';
 import ProfilePage from './pages/ProfilePage';
+import CityPage from './pages/CityPage';
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
                 <Route element={<RequireAuthComponent />}>
                   <Route path="/private" element={<PrivatePage />} />
                   <Route path="/profile" element={<ProfilePage />} />
+                  <Route path="/city" element={<CityPage />} />
                 </Route>
               </Routes>
             </main>
