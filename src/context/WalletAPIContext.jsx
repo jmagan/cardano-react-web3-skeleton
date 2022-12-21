@@ -1,4 +1,4 @@
-import { useState, useEffect, createContext } from 'react';
+import { useState, useEffect, useCallback, createContext } from 'react';
 import { Buffer } from 'buffer';
 
 const { Address } = await import('@emurgo/cardano-serialization-lib-browser');
@@ -32,28 +32,12 @@ export const WalletAPIProvider = ({ children }) => {
     }
   }, []);
 
-  useEffect(() => {
-    if (selectedWallet) {
-      connectWallet();
-    }
-  }, [selectedWallet]);
-
-  useEffect(() => {
-    if (networkId === 0) {
-      getAddress();
-      setIsMainnet(false);
-    } else if (networkId === 1) {
-      getAddress();
-      setIsMainnet(true);
-    }
-  }, [networkId]);
-
   const selectWallet = (wallet) => {
     setSelectedWallet(wallet);
     localStorage.setItem('selectedWallet', wallet);
   };
 
-  const connectWallet = async () => {
+  const connectWallet = useCallback(async () => {
     if (selectedWallet === undefined) return;
 
     let walletAPIResponse;
@@ -88,14 +72,30 @@ export const WalletAPIProvider = ({ children }) => {
       setSelectedWallet(null);
       console.log(err);
     }
-  };
+  }, [cardano.nami, cardano.eternl, cardano.flint, selectedWallet]);
 
-  const getAddress = async () => {
+  const getAddress = useCallback(async () => {
     const raw = await walletAPI?.getChangeAddress();
     const addr = Address.from_bytes(Buffer.from(raw ?? '', 'hex')).to_bech32();
     localStorage.setItem('address', addr);
     setAddress(addr);
-  };
+  }, [walletAPI]);
+
+  useEffect(() => {
+    if (networkId === 0) {
+      getAddress();
+      setIsMainnet(false);
+    } else if (networkId === 1) {
+      getAddress();
+      setIsMainnet(true);
+    }
+  }, [connectWallet, getAddress, networkId]);
+
+  useEffect(() => {
+    if (selectedWallet) {
+      connectWallet();
+    }
+  }, [selectedWallet, connectWallet]);
 
   return (
     <WalletAPIContext.Provider
