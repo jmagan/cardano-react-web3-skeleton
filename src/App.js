@@ -8,12 +8,13 @@ import HomePage from './pages/HomePage';
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
 import RequireAuthComponent from './components/RequireAuthComponent';
-import PrivatePage from './pages/PrivatePage';
 import { WalletAPIProvider } from './context/WalletAPIContext';
 import { AuthProvider } from './context/AuthContext';
 import ProfilePage from './pages/ProfilePage';
 import CityPage from './pages/CityPage';
-import PersistLoginComponent from './components/persistLoginComponent';
+import PersistLoginComponent from './components/PersistLoginComponent';
+import UserPage from './pages/UserPage';
+import UnauthorizedPage from './pages/UnauthorizedPage';
 
 function App() {
   return (
@@ -30,13 +31,19 @@ function App() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/login" element={<LoginPage />} />
+                <Route path="/unauthorized" element={<UnauthorizedPage />} />
 
                 {/* Public private */}
                 <Route element={<PersistLoginComponent />}>
-                  <Route element={<RequireAuthComponent />}>
-                    <Route path="/private" element={<PrivatePage />} />
+                  {/* User and administrator role pages*/}
+                  <Route element={<RequireAuthComponent allowedRoles={['user', 'admin']} />}>
                     <Route path="/profile" element={<ProfilePage />} />
+                  </Route>
+
+                  {/* Administrator role pages*/}
+                  <Route element={<RequireAuthComponent allowedRoles={['admin']} />}>
                     <Route path="/city" element={<CityPage />} />
+                    <Route path="/user" element={<UserPage />} />
                   </Route>
                 </Route>
               </Routes>

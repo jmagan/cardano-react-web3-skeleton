@@ -5,8 +5,6 @@ import { useEffect } from 'react';
 import useAuthAxios from '../hooks/useAuthAxios';
 
 export default function ProfilePage() {
-  const controller = new AbortController();
-
   const authAxios = useAuthAxios();
 
   const [email, setEmail] = useState('');
@@ -15,7 +13,7 @@ export default function ProfilePage() {
   const [city, setCity] = useState('');
   const [country, setCountry] = useState('');
   const [walletAddress, setWalletAddress] = useState('');
-  const [urlGithub, setUrlGithub] = useState('');
+  const [urlGitHub, setUrlGitHub] = useState('');
   const [urlTwitter, setUrlTwitter] = useState('');
 
   const [cities, setCities] = useState([]);
@@ -44,7 +42,7 @@ export default function ProfilePage() {
           setCountry(profile.country ?? '');
           setWalletAddress(profile.walletAddress ?? '');
           setUrlTwitter(profile.urlTwitter ?? '');
-          setUrlGithub(profile.urlGithub ?? '');
+          setUrlGitHub(profile.urlGitHub ?? '');
         }
 
         console.log(response.data);
@@ -82,7 +80,7 @@ export default function ProfilePage() {
       isMounted = false;
       controller.abort();
     };
-  }, []);
+  }, [authAxios]);
 
   const saveProfile = async (evt) => {
     evt.preventDefault();
@@ -93,7 +91,7 @@ export default function ProfilePage() {
       phone,
       city,
       country,
-      urlGithub,
+      urlGitHub,
       urlTwitter,
     };
 
@@ -227,14 +225,14 @@ export default function ProfilePage() {
                         />
                       </div>
                       <div className="col-md-6">
-                        <label htmlFor="urlGithub">GitHub</label>
+                        <label htmlFor="urlGitHub">GitHub</label>
                         <input
                           type="text"
                           className="form-control"
-                          id="urlGithub"
-                          name="urlGithub"
-                          value={urlGithub}
-                          onChange={(evt) => setUrlGithub(evt.target.value)}
+                          id="urlGitHub"
+                          name="urlGitHub"
+                          value={urlGitHub}
+                          onChange={(evt) => setUrlGitHub(evt.target.value)}
                         />
                       </div>
                       <div className="col-12">

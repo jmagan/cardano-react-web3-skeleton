@@ -1,9 +1,9 @@
-import React, { useMemo, useState, useCallback, useRef } from 'react';
-import CityEditModal from '../components/CityEditModal';
-import ReactTableComponent from '../components/ReactTableComponent';
+import React, { useState, useRef, useCallback, useMemo } from 'react';
 import useAuthAxios from '../hooks/useAuthAxios';
+import ReactTableComponent from '../components/ReactTableComponent';
+import UserEditModal from '../components/UserEditModal';
 
-export default function CityPage() {
+export default function UserPage() {
   const authAxios = useAuthAxios();
 
   const [errorMessage, setErrorMessage] = useState([]);
@@ -12,15 +12,15 @@ export default function CityPage() {
   const [data, setData] = useState({ docs: [], totalDocs: 0 });
 
   const [openModal, setOpenModal] = useState(false);
-  const [cityId, setCityId] = useState(null);
+  const [userId, setUserId] = useState(null);
 
   const closeModalCB = useCallback(() => {
     setOpenModal(false);
     tableRef.current.refreshTable();
-    setCityId(null);
+    setUserId(null);
   }, []);
 
-  function DefaultColumnFilter({ column: { filterValue, preFilteredRows, setFilter } }) {
+  function DefaultColumnFilter({ column: { filterValue, setFilter } }) {
     return (
       <input
         className="form-control"
@@ -32,9 +32,9 @@ export default function CityPage() {
     );
   }
 
-  const deleteCity = useCallback(
-    async (cityId) => {
-      await authAxios.delete(`/cities/${cityId}`);
+  const deleteUser = useCallback(
+    async (userId) => {
+      await authAxios.delete(`/users/${userId}`);
       tableRef.current.refreshTable();
     },
     [authAxios],
@@ -47,7 +47,7 @@ export default function CityPage() {
           <i
             className="bi bi-pencil-square me-3"
             onClick={() => {
-              setCityId(cell.value);
+              setUserId(cell.value);
               setOpenModal(true);
             }}
           ></i>
@@ -55,14 +55,14 @@ export default function CityPage() {
             className="bi bi-trash"
             onClick={() => {
               if (window.confirm('Are you sure?')) {
-                deleteCity(cell.value);
+                deleteUser(cell.value);
               }
             }}
           ></i>
         </div>
       );
     },
-    [deleteCity],
+    [deleteUser],
   );
 
   const columns = useMemo(() => {
@@ -76,6 +76,42 @@ export default function CityPage() {
       {
         Header: 'Name',
         accessor: 'name',
+        Filter: DefaultColumnFilter,
+        filter: 'include',
+      },
+      {
+        Header: 'E-mail',
+        accessor: 'email',
+        Filter: DefaultColumnFilter,
+        filter: 'include',
+      },
+      {
+        Header: 'Verified',
+        accessor: 'verified',
+        Filter: DefaultColumnFilter,
+        filter: 'include',
+      },
+      {
+        Header: 'Role',
+        accessor: 'role',
+        Filter: DefaultColumnFilter,
+        filter: 'include',
+      },
+      {
+        Header: 'City',
+        accessor: 'city',
+        Filter: DefaultColumnFilter,
+        filter: 'include',
+      },
+      {
+        Header: 'Country',
+        accessor: 'country',
+        Filter: DefaultColumnFilter,
+        filter: 'include',
+      },
+      {
+        Header: 'Phone',
+        accessor: 'phone',
         Filter: DefaultColumnFilter,
         filter: 'include',
       },
@@ -96,7 +132,7 @@ export default function CityPage() {
 
   const fetchData = useCallback(async (authAxios, pageIndex, pageSize, sortBy, filters) => {
     try {
-      const response = await authAxios.get('/cities', {
+      const response = await authAxios.get('/users', {
         params: {
           page: pageIndex + 1,
           limit: pageSize,
@@ -128,7 +164,7 @@ export default function CityPage() {
             <div className="col-lg-12 col-xl-11">
               <div className="card mt-5">
                 <div className="card-header text-center">
-                  <h1>Cities</h1>
+                  <h1>Users</h1>
                 </div>
                 <div className="card-body">
                   {errorMessage.length > 0 && (
@@ -146,7 +182,7 @@ export default function CityPage() {
                     type="button"
                     className="btn btn-primary"
                     onClick={() => {
-                      setCityId(null);
+                      setUserId(null);
                       setOpenModal(true);
                     }}
                   >
@@ -159,7 +195,7 @@ export default function CityPage() {
           </div>
         </div>
       </section>
-      <CityEditModal open={openModal} closeCB={closeModalCB} cityId={cityId} />
+      <UserEditModal open={openModal} closeCB={closeModalCB} userId={userId} />
     </div>
   );
 }

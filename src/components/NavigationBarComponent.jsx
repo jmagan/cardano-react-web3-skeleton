@@ -5,13 +5,16 @@ import AuthContext from '../context/AuthContext';
 import { WalletAPIContext } from '../context/WalletAPIContext';
 
 import WalletIcon from './WalletIconComponent';
+import useLogout from '../hooks/useLogout';
 
 export default function NavigationBarComponent() {
   const { cardano } = window;
 
   const { address, networkId, selectWallet, selectedWallet } = useContext(WalletAPIContext);
 
-  const { userData } = useContext(AuthContext);
+  const { userData, walletAddress } = useContext(AuthContext);
+
+  const logout = useLogout();
 
   useEffect(() => {
     console.log('Address changed', address);
@@ -41,33 +44,35 @@ export default function NavigationBarComponent() {
           </button>
           <div className="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
             <ul className="navbar-nav">
-              <li className="nav-item">
-                <Link className="nav-link" to="/city">
-                  Cities
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/profile">
-                  Profile
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/private">
-                  Private
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/login">
-                  Login
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/register">
-                  Sign Up
-                </Link>
-              </li>
+              {!walletAddress ? (
+                <>
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/login">
+                      Login
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/register">
+                      Sign Up
+                    </Link>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/profile">
+                      Profile
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/" onClick={() => logout()}>
+                      Logout
+                    </Link>
+                  </li>
+                </>
+              )}
               <li className="nav-item navbar-text">
-                {address ? (
+                {userData?.name ? (
                   <span className="p-2 text-white bg-success border border-success rounded-pill">{userData?.name}</span>
                 ) : (
                   ''
