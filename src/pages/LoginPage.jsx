@@ -24,6 +24,7 @@ export default function LoginPage() {
       const payload = {
         host: 'HOST',
         action: 'Login',
+        timestamp: Date.now(),
       };
       const rewardAddress = CSL.Address.from_bech32(stakeAddress);
 

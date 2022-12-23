@@ -27,6 +27,7 @@ export default function RegisterPage() {
         action: 'Sign up',
         name: userName,
         email: userEmail,
+        timestamp: Date.now(),
       };
       const rewardAddress = CSL.Address.from_bech32(stakeAddress);
 
