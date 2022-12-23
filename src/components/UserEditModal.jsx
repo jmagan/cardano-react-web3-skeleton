@@ -17,34 +17,46 @@ export default function UserEditModal({ open, userId, closeCB }) {
   const [phone, setPhone] = useState('');
   const [city, setCity] = useState('');
   const [country, setCountry] = useState('');
-  const [role, setRole] = useState('');
+  const [role, setRole] = useState('user');
   const [urlGitHub, setUrlGitHub] = useState('');
   const [urlTwitter, setUrlTwitter] = useState('');
 
   useEffect(() => {
+    setErrorMessage([]);
     const getCity = async () => {
       if (userId) {
-        const response = await authAxios.get(`/users/${userId}`);
+        try {
+          const response = await authAxios.get(`/users/${userId}`);
 
-        console.log(response.data);
+          console.log(response.data);
 
-        setEmail(response.data.email);
-        setName(response.data.name);
-        setWalletAddress(response.data.walletAddress);
-        setPhone(response.data.phone ?? '');
-        setCity(response.data.city ?? '');
-        setCountry(response.data.country ?? '');
-        setRole(response.data.role ?? '');
-        setUrlTwitter(response.data.urlTwitter ?? '');
-        setUrlGitHub(response.data.urlGitHub ?? '');
+          setEmail(response.data.email);
+          setName(response.data.name);
+          setWalletAddress(response.data.walletAddress);
+          setPhone(response.data.phone ?? '');
+          setCity(response.data.city ?? '');
+          setCountry(response.data.country ?? '');
+          setRole(response.data.role ?? '');
+          setUrlTwitter(response.data.urlTwitter ?? '');
+          setUrlGitHub(response.data.urlGitHub ?? '');
+        } catch (error) {
+          if (!error?.response) {
+            setErrorMessage(['No Server Response']);
+          } else if (Array.isArray(error.response.data.errors.msg)) {
+            setErrorMessage(error.response.data.errors.msg.map((val) => val.param + ': ' + val.msg));
+          } else {
+            setErrorMessage([error.response.data.errors.msg]);
+          }
+        }
       } else {
+        setErrorMessage([]);
         setEmail('');
         setName('');
         setWalletAddress('');
         setPhone('');
         setCity('');
         setCountry('');
-        setRole('');
+        setRole('user');
         setUrlTwitter('');
         setUrlGitHub('');
       }
@@ -85,15 +97,25 @@ export default function UserEditModal({ open, userId, closeCB }) {
       urlGitHub,
     };
 
-    let response;
-    if (userId) {
-      response = await authAxios.patch(`/users/${userId}`, payload);
-    } else {
-      response = await authAxios.post(`/users`, payload);
-    }
+    try {
+      let response;
+      if (userId) {
+        response = await authAxios.patch(`/users/${userId}`, payload);
+      } else {
+        response = await authAxios.post(`/users`, payload);
+      }
 
-    if (response.status === 200 || response.status === 201) {
-      modal.hide();
+      if (response.status === 200 || response.status === 201) {
+        modal.hide();
+      }
+    } catch (error) {
+      if (!error?.response) {
+        setErrorMessage(['No Server Response']);
+      } else if (Array.isArray(error.response.data.errors.msg)) {
+        setErrorMessage(error.response.data.errors.msg.map((val) => val.param + ': ' + val.msg));
+      } else {
+        setErrorMessage([error.response.data.errors.msg]);
+      }
     }
   };
 
@@ -108,6 +130,18 @@ export default function UserEditModal({ open, userId, closeCB }) {
   useEffect(() => {
     if (modal !== undefined) {
       open ? modal.show() : modal.hide();
+    }
+    if (!open) {
+      setErrorMessage([]);
+      setEmail('');
+      setName('');
+      setWalletAddress('');
+      setPhone('');
+      setCity('');
+      setCountry('');
+      setRole('user');
+      setUrlTwitter('');
+      setUrlGitHub('');
     }
   }, [open, modal]);
 
