@@ -22,7 +22,7 @@ export default function LoginPage() {
   const userLogin = async () => {
     try {
       const payload = {
-        host: 'HOST',
+        url: 'HOST/login',
         action: 'Login',
         timestamp: Date.now(),
       };
@@ -45,6 +45,10 @@ export default function LoginPage() {
     } catch (error) {
       if (!error?.response) {
         setErrorMessage(['No Server Response']);
+      } else if (error.response.status === 401) {
+        setErrorMessage(['Unauthorized']);
+      } else if (error.response.status === 500) {
+        setErrorMessage(['Server error']);
       } else if (Array.isArray(error.response.data.errors.msg)) {
         setErrorMessage(error.response.data.errors.msg.map((val) => val.param + ': ' + val.msg));
       } else {
