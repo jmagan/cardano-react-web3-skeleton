@@ -45,6 +45,11 @@ export default function HomePage() {
                       </Link>
                     </li>
                   </ul>
+                  <h2>Support</h2>
+                  <br />
+                  <a href="https://app.doitwithlovelace.io/users/DoItWithLovelace" target="_blank" rel="noreferrer">
+                    <img src="https://app.doitwithlovelace.io/api/og/assets/donationButton" alt="donation" />
+                  </a>
                 </div>
               </div>
             </div>

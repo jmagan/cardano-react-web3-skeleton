@@ -23,7 +23,7 @@ export default function RegisterPage() {
   const userSignUp = async () => {
     try {
       const payload = {
-        url: 'HOST/register',
+        uri: 'HOST/register',
         action: 'Sign up',
         name: userName,
         email: userEmail,

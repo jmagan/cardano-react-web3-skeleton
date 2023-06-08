@@ -22,7 +22,7 @@ export default function LoginPage() {
   const userLogin = async () => {
     try {
       const payload = {
-        url: 'HOST/login',
+        uri: 'HOST/login',
         action: 'Login',
         timestamp: Date.now(),
       };

@@ -7,6 +7,9 @@ import { WalletAPIContext } from '../context/WalletAPIContext';
 import WalletIcon from './WalletIconComponent';
 import useLogout from '../hooks/useLogout';
 
+import '@popperjs/core';
+import 'bootstrap/dist/js/bootstrap';
+
 export default function NavigationBarComponent() {
   const { cardano } = window;
 
@@ -90,21 +93,21 @@ export default function NavigationBarComponent() {
                     {selectedWallet !== null && <WalletIcon></WalletIcon>} {selectedWallet == null && 'Not Connected'}
                   </button>
                   <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
-                    {cardano?.nami && selectedWallet !== 'Nami' && (
+                    {window.cardano?.nami && selectedWallet !== 'Nami' && (
                       <li>
                         <button className="dropdown-item align-middle" onClick={() => selectWallet('Nami')}>
                           <img src={cardano.nami.icon} alt="" height="18px" style={{ marginRight: '10px' }} /> Nami
                         </button>
                       </li>
                     )}
-                    {cardano?.eternl && selectedWallet !== 'Eternl' && (
+                    {window.cardano?.eternl && selectedWallet !== 'Eternl' && (
                       <li>
                         <button className="dropdown-item align-bottom" onClick={() => selectWallet('Eternl')}>
                           <img src={cardano.eternl.icon} alt="" height="18px" style={{ marginRight: '10px' }} /> Eternl
                         </button>
                       </li>
                     )}
-                    {cardano?.flint && selectedWallet !== 'Flint' && (
+                    {window.cardano?.flint && selectedWallet !== 'Flint' && (
                       <li>
                         <button className="dropdown-item align-bottom" onClick={() => selectWallet('Flint')}>
                           <img src={cardano.flint.icon} alt="" height="18px" style={{ marginRight: '10px' }} /> Flint

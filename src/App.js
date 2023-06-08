@@ -1,6 +1,4 @@
 import './App.scss';
-import '@popperjs/core';
-import 'bootstrap/dist/js/bootstrap';
 
 import NavigationBarComponent from './components/NavigationBarComponent';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
